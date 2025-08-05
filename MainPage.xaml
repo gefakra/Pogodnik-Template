@@ -1,0 +1,115 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WeatherApp.MainPage"
+             BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{DynamicResource BackgroundGradientStart}" Offset="0"/>
+            <GradientStop Color="{DynamicResource BackgroundGradientEnd}" Offset="1"/>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="15" Spacing="15" >
+
+            <!-- Логотип и название -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Image Source="logo.svg" HeightRequest="81" WidthRequest="81"/>
+                <Label Text="Погодник"
+                       FontSize="31"
+                       FontAttributes="Italic"
+                       TextColor="{DynamicResource TextColorPrimary}"
+                       VerticalOptions="Center"
+                       FontFamily="LoraM"/>
+            </HorizontalStackLayout>
+
+            <!-- Иконки навигации -->
+            <HorizontalStackLayout HorizontalOptions="Start" Spacing="5" >
+                <ImageButton Source="calendar.svg" WidthRequest="32" HeightRequest="32"
+                             Command="{Binding OpenCalendarCommand}"
+                             Style="{DynamicResource IconButtonStyle}" />
+                <ImageButton Source="notes.svg" WidthRequest="37" HeightRequest="37"
+                             Command="{Binding OpenNotesCommand}"
+                             Style="{DynamicResource IconButtonStyle}" />
+                <ImageButton Source="location.svg" WidthRequest="24" HeightRequest="26"
+                             Command="{Binding LoadWeatherByLocationCommand}"
+                             Style="{DynamicResource IconButtonStyle}" />
+            </HorizontalStackLayout>
+
+            <BoxView HeightRequest="1"
+            Color="#80000000"
+            HorizontalOptions="FillAndExpand"
+            Margin="5,0"
+            Opacity="0.5"/>       
+            <Frame Style="{DynamicResource WeatherFrameStyle}" Padding="0" Margin="0">
+                <Grid ColumnDefinitions="Auto,Auto,*"
+                        VerticalOptions="Center">
+
+                    <Image Source="search.svg"
+                        WidthRequest="20"
+                        HeightRequest="20"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Start"                        
+                        Margin="8,0,0,0"/>
+                    
+                    <Entry x:Name="CityName"
+                           Placeholder="Введите город"
+                           Grid.Column="2"
+                           Text="{Binding CityName}"
+                           Style="{DynamicResource SearchEntryStyle}"
+                           Margin="10,0,0,0"
+                           VerticalOptions="Center"
+                           Completed="OnSearchCompleted" />                    
+                </Grid>
+            </Frame>
+
+            <!-- Блок с погодой -->
+            <Frame Style="{DynamicResource WeatherFrameStyle}"
+                   IsVisible="{Binding HasWeatherInfo}">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="{Binding WeatherInfo.City}"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="{DynamicResource TextColorPrimary}"/>
+
+                    <HorizontalStackLayout Spacing="20">
+                        <Image Source="{Binding WeatherInfo.Icon}" HeightRequest="70"/>
+                        <VerticalStackLayout>
+                            <Label Text="{Binding WeatherInfo.Description}"
+                                   FontSize="20"
+                                   TextColor="{DynamicResource TextColorPrimary}"/>
+                            <Label Text="{Binding WeatherInfo.Temperature, StringFormat='{0}°C'}"
+                                   FontSize="34"
+                                   FontAttributes="Bold"
+                                   TextColor="{DynamicResource TextColorPrimary}"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+            <ScrollView Orientation="Horizontal" Margin="0,20,0,0">
+                <HorizontalStackLayout Spacing="12">
+                    <CollectionView
+            ItemsSource="{Binding Forecast}"
+            ItemsLayout="HorizontalList"
+            HeightRequest="140"
+            HorizontalScrollBarVisibility="Never">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Style="{DynamicResource WeatherFrameStyle}">
+                                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                        <Label Text="{Binding Date}" FontSize="12" TextColor="White" HorizontalTextAlignment="Center"/>
+                                        <Image Source="{Binding Icon, Converter={StaticResource IconToUrlConverter}}" HeightRequest="40"/>
+                                        <Label Text="{Binding MinTemp, StringFormat='↓ {0}°C'}" FontSize="12" TextColor="LightBlue"/>
+                                        <Label Text="{Binding MaxTemp, StringFormat='↑ {0}°C'}" FontSize="12" TextColor="OrangeRed"/>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </HorizontalStackLayout>
+            </ScrollView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

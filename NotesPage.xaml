@@ -1,0 +1,114 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:WeatherApp.ViewModels"
+             x:Class="WeatherApp.NotesPage"
+             Title="📝 Заметки">
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{DynamicResource BackgroundGradientStart}" Offset="0" />
+            <GradientStop Color="{DynamicResource BackgroundGradientEnd}" Offset="1" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <!-- Режим создания заметки -->
+            <VerticalStackLayout Padding="10" Spacing="15"
+                                 IsVisible="{Binding IsCreateMode}">
+
+                <Frame Style="{DynamicResource WeatherFrameStyle}">
+                    <DatePicker Date="{Binding SelectedDate}"
+                                Format="dddd, dd MMM yyyy"
+                                TextColor="{DynamicResource TextColorSecondary}" />
+                </Frame>
+
+                <Frame Style="{DynamicResource WeatherFrameStyle}">
+                    <Entry Placeholder="Заголовок"
+                           Text="{Binding Title}"
+                           TextColor="{DynamicResource TextColorPrimary}" />
+                </Frame>
+
+                <Frame Style="{DynamicResource WeatherFrameStyle}">
+                    <Editor Placeholder="Текст заметки"
+                            HeightRequest="100"
+                            Text="{Binding NoteText}"
+                            TextColor="{DynamicResource TextColorSecondary}" />
+                </Frame>
+
+                <Button Text="💾 Сохранить"
+                        Style="{DynamicResource PrimaryButtonStyle}"
+                        Command="{Binding SaveNoteCommand}" />
+
+                <!-- Список заметок в режиме создания -->
+                <CollectionView ItemsSource="{Binding Notes}"
+                                SelectionMode="Single"
+                                SelectedItem="{Binding SelectedNote, Mode=TwoWay}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Style="{DynamicResource WeatherFrameStyle}"
+                                   Padding="12"
+                                   Margin="0,5"
+                                   BackgroundColor="{DynamicResource FrameBackgroundColor}">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Title}"
+                                           FontAttributes="Bold"
+                                           FontSize="16"
+                                           TextColor="{DynamicResource TextColorPrimary}" />
+                                    <Label Text="{Binding CreatedAt, StringFormat='Дата: {0:dd.MM.yyyy}'}"
+                                           FontSize="14"
+                                           TextColor="{DynamicResource TextColorSecondary}" />
+                                    <Label Text="{Binding WeatherCondition}"
+                                           FontSize="13"
+                                           TextColor="{DynamicResource TextColorSecondary}" />
+                                    <Label Text="{Binding Location}"
+                                           FontSize="12"
+                                           TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <!-- Режим просмотра списка -->
+            <VerticalStackLayout Padding="10" Spacing="15"
+                                 IsVisible="{Binding IsListMode}">
+
+                <CollectionView ItemsSource="{Binding Notes}"
+                                SelectionMode="Single"
+                                SelectedItem="{Binding SelectedNote, Mode=TwoWay}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Style="{DynamicResource WeatherFrameStyle}"
+                                   Padding="12"
+                                   Margin="0,5"
+                                   BackgroundColor="{DynamicResource FrameBackgroundColor}">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Title}"
+                                           FontAttributes="Bold"
+                                           FontSize="16"
+                                           TextColor="{DynamicResource TextColorPrimary}" />
+                                    <Label Text="{Binding CreatedAt, StringFormat='Дата: {0:dd.MM.yyyy}'}"
+                                           FontSize="14"
+                                           TextColor="{DynamicResource TextColorSecondary}" />
+                                    <Label Text="{Binding WeatherCondition}"
+                                           FontSize="13"
+                                           TextColor="{DynamicResource TextColorSecondary}" />
+                                    <Label Text="{Binding Location}"
+                                           FontSize="12"
+                                           TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Button Text="🗑 Удалить"
+                        Style="{DynamicResource PrimaryButtonStyle}"
+                        Command="{Binding DeleteNoteCommand}" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
